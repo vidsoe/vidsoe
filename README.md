@@ -15,4 +15,4 @@ Here are some ideas to get you started:
 - ⚡ Fun fact: ...
 -->
 
-![Vidsoe](vidsoe-448.svg?raw=true|width=50)
+![Vidsoe](vidsoe-448.svg?raw=true =250x)

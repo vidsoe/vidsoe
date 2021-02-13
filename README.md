@@ -15,4 +15,4 @@ Here are some ideas to get you started:
 - ⚡ Fun fact: ...
 -->
 
-![Vidsoe](vidsoe.png?raw=true&v=1 "Vidsoe")
+![Vidsoe](vidsoe.png "Vidsoe")

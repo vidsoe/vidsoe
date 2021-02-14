@@ -50,7 +50,7 @@ EOF;
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         public static function uninstall(){
-            $file = trailingslashit(WPMU_PLUGIN_DIR) . 'vidsoe/vidsoe.php';
+            $file = trailingslashit(WPMU_PLUGIN_DIR) . 'vidsoe.php';
             if(!file_exists($file)){
                 return;
             }

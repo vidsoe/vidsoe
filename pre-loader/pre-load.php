@@ -15,9 +15,9 @@ if(!function_exists('vidsoe')){
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 $vidsoe_dir = trailingslashit(dirname(dirname(__FILE__)));
-foreach(glob($vidsoe_dir . '*', GLOB_ONLYDIR) as $vidsoe_dir){
-    if(file_exists($vidsoe_dir . '/methods/methods.php')){
-        require_once($vidsoe_dir . '/methods/methods.php');
+foreach(glob($vidsoe_dir . 'methods/*', GLOB_ONLYDIR) as $vidsoe_dir){
+    if(file_exists($vidsoe_dir . '/methods.php')){
+        require_once($vidsoe_dir . '/methods.php');
     }
 }
 unset($vidsoe_dir);

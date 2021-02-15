@@ -71,6 +71,14 @@ if(!class_exists('Vidsoe')){
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    	public static function do($name = ''){
+            if($name){
+                do_action($name);
+            }
+    	}
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     	public static function get_instance(){
     		if(is_null(self::$instance)){
     			self::$instance = new self;

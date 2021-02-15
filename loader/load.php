@@ -21,12 +21,9 @@ if(file_exists($vidsoe_file)){
     });
     vidsoe()->on('plugins_loaded', function(){
         vidsoe()->build_update_checker('https://github.com/vidsoe/vidsoe', VIDSOE, 'vidsoe');
+        vidsoe()->do('vidsoe_loaded');
     });
 }
 unset($vidsoe_file);
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-vidsoe()->do('vidsoe_loaded');
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

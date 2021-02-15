@@ -23,7 +23,7 @@ Network: true
 Plugin Name: Vidsoe Loader
 Plugin URI: https://github.com/vidsoe/vidsoe
 Text Domain: vidsoe-loader
-Version: 0.2.15.3
+Version: 0.2.15.4
 */
 
 if(defined('WP_PLUGIN_DIR') and function_exists('trailingslashit')){
@@ -40,7 +40,7 @@ EOF;
                 return;
             }
             if(wp_mkdir_p(WPMU_PLUGIN_DIR)){
-                file_put_contents($file, $content);
+                @file_put_contents($file, $content);
             }
         }
 
@@ -51,7 +51,7 @@ EOF;
             if(!file_exists($file)){
                 return;
             }
-            unlink($file);
+            @unlink($file);
         }
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

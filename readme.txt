@@ -4,7 +4,7 @@ Donate link: https://github.com/vidsoe
 Tags: vidsoe
 Requires at least: 5.0
 Tested up to: 5.6
-Stable tag: 0.2.15
+Stable tag: 0.2.15.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html

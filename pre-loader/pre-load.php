@@ -23,3 +23,7 @@ foreach(glob($vidsoe_dir . '*', GLOB_ONLYDIR) as $vidsoe_dir){
 unset($vidsoe_dir);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+do_action('vidsoe_pre_loaded');
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

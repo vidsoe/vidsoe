@@ -10,7 +10,7 @@ Network: true
 Plugin Name: Vidsoe
 Plugin URI: https://github.com/vidsoe/vidsoe
 Text Domain: vidsoe
-Version: 0.2.15
+Version: 0.2.15.1
 */
 
 if(defined('ABSPATH')){

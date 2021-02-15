@@ -11,8 +11,8 @@ register_deactivation_hook(VIDSOE, ['Vidsoe_Loader', 'uninstall']);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-$file = trailingslashit(WPMU_PLUGIN_DIR) . 'vidsoe.php';
-if(file_exists($file)){
+$vidsoe_file = trailingslashit(WPMU_PLUGIN_DIR) . 'vidsoe.php';
+if(file_exists($vidsoe_file)){
     vidsoe()->on('after_setup_theme', function(){
         $file = get_stylesheet_directory() . '/vidsoe-functions.php';
         if(file_exists($file)){
@@ -23,5 +23,6 @@ if(file_exists($file)){
         vidsoe()->build_update_checker('https://github.com/vidsoe/vidsoe', VIDSOE, 'vidsoe');
     });
 }
+unset($vidsoe_file);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

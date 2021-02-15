@@ -10,12 +10,12 @@ Network: true
 Plugin Name: Vidsoe
 Plugin URI: https://github.com/vidsoe/vidsoe
 Text Domain: vidsoe
-Version: 0.2.13.3
+Version: 0.2.15
 */
 
 if(defined('ABSPATH')){
     if(!defined('VIDSOE')){
         define('VIDSOE', __FILE__);
-        require_once(plugin_dir_path(VIDSOE) . 'methods/loader/load.php');
+        require_once(plugin_dir_path(VIDSOE) . 'loader/load.php');
     }
 }

@@ -29,21 +29,18 @@ Version: 0.2.13.1
 if(defined('WP_PLUGIN_DIR') and function_exists('trailingslashit')){
     if(file_exists(trailingslashit(WP_PLUGIN_DIR) . 'vidsoe/vidsoe.php')){
         if((function_exists('get_option') and in_array('vidsoe/vidsoe.php', (array) get_option('active_plugins'))) or (function_exists('get_site_option') and array_key_exists('vidsoe/vidsoe.php', (array) get_site_option('active_sitewide_plugins')))){
-            require_once(trailingslashit(WP_PLUGIN_DIR) . 'vidsoe/methods/vidsoe/load.php');
+            require_once(trailingslashit(WP_PLUGIN_DIR) . 'vidsoe/pre-loader/pre-load.php');
         }
     }
 }
 
 EOF;
             $file = trailingslashit(WPMU_PLUGIN_DIR) . 'vidsoe.php';
-            if(file_exists($file) and md5($content) === md5_file($file)){
+            if(file_exists($file) and md5($content) == md5_file($file)){
                 return;
             }
-            if(!is_dir(untrailingslashit(WPMU_PLUGIN_DIR))){
-                @mkdir(untrailingslashit(WPMU_PLUGIN_DIR));
-            }
-            if(is_writable(untrailingslashit(WPMU_PLUGIN_DIR))){
-                @file_put_contents($file, $content);
+            if(wp_mkdir_p(WPMU_PLUGIN_DIR)){
+                file_put_contents($file, $content);
             }
         }
 
@@ -54,7 +51,7 @@ EOF;
             if(!file_exists($file)){
                 return;
             }
-            @unlink($file);
+            unlink($file);
         }
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

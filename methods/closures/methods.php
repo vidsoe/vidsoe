@@ -5,10 +5,10 @@
 if(!function_exists('vidsoe_md5_closure')){
     function vidsoe_md5_closure($data = '', $spl_object_hash = false){
         if($data instanceof Closure){
-            if(!class_exists('\Opis\Closure\SerializableClosure')){
+            if(!class_exists('Opis\Closure\SerializableClosure')){
                 require_once(plugin_dir_path(__FILE__) . 'closure-3.6.1/autoload.php');
             }
-			$wrapper = new \Opis\Closure\SerializableClosure($data);
+			$wrapper = new Opis\Closure\SerializableClosure($data);
 			$serialized = serialize($wrapper);
 			if(!$spl_object_hash){
 				$serialized = str_replace(spl_object_hash($data), 'spl_object_hash', $serialized);

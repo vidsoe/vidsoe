@@ -80,5 +80,11 @@ if(!class_exists('Vidsoe')){
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    	public static function has_method($name = ''){
+            return (isset(self::$classes[$name]) or isset(self::$methods[$name]));
+    	}
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     }
 }

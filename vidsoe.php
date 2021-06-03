@@ -17,5 +17,6 @@ if(defined('ABSPATH')){
     if(!defined('VIDSOE')){
         define('VIDSOE', __FILE__);
         require_once(plugin_dir_path(VIDSOE) . 'loader/load.php');
+        //prueba
     }
 }

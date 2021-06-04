@@ -1,20 +1,20 @@
 === Vidsoe ===
 Contributors: vidsoe
-Donate link: https://github.com/vidsoe
-Tags: vidsoe
-Requires at least: 5.0
-Tested up to: 5.6
-Stable tag: 0.2.15.4
-Requires PHP: 5.6
+Donate link: https://vidsoe.org
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Requires at least: 5.7
+Requires PHP: 5.6
+Stable tag: 1.6.3
+Tags: vidsoe
+Tested up to: 5.7.2
 
 Vidsoe
 
 == Description ==
 
-A collection of useful methods for your WordPress plugins or theme's functions.php.
+Sitios web con la más alta calidad y la mayor capacidad, al mejor precio.
 
 == Changelog ==
 
-[See full changelog here](https://github.com/vidsoe/vidsoe "Vidsoe").
+[Changelog »](https://github.com/vidsoe/vidsoe "Vidsoe")

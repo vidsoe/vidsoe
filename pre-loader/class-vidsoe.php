@@ -39,7 +39,8 @@ if(!class_exists('Vidsoe')){
         			return call_user_func_array($method, $arguments);
         		} else {
                     if(defined('WP_DEBUG') and WP_DEBUG){
-                        wp_die(new WP_Error('fatal_error', 'Call to undefined method Vidsoe::' . $name . '()'));
+                        $error = new WP_Error('fatal_error', 'Call to undefined method Vidsoe::' . $name . '()');
+                        wp_die($error);
                     } else {
                         return null; // Silence is golden.
                     }

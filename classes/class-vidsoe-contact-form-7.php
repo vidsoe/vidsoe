@@ -50,8 +50,7 @@ if(!class_exists('Vidsoe_Contact_Form_7')){
 
     	public function ace(){
             vidsoe()->enqueue()->ace(['wpcf7-admin']);
-			wp_enqueue_script('vidsoe-contact-form-7-editor', vidsoe()->url() . 'assets/contact-form-7-editor.js', ['wpcf7-admin'], filemtime(vidsoe()->dir() . 'assets/contact-form-7-editor.js'), true);
-            wp_enqueue_style('vidsoe-contact-form-7-editor', vidsoe()->url() . 'assets/contact-form-7-editor.css', ['contact-form-7-admin'], filemtime(vidsoe()->dir() . 'assets/contact-form-7-editor.css'));
+			// add inline after vidsoe-contact-form-7
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,6 +94,15 @@ if(!class_exists('Vidsoe_Contact_Form_7')){
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     	public function load(){
+            $vidsoe->one('admin_enqueue_scripts', function(){
+                wp_enqueue_script('vidsoe', $this->url() . 'assets/vidsoe-contact-form-7.js', ['vidsoe'], filemtime($this->dir() . 'assets/vidsoe-contact-form-7.js'), true);
+            });
+            $vidsoe->one('login_enqueue_scripts', function(){
+                wp_enqueue_script('vidsoe', $this->url() . 'assets/vidsoe-contact-form-7.js', ['vidsoe'], filemtime($this->dir() . 'assets/vidsoe-contact-form-7.js'), true);
+            });
+            $vidsoe->one('wp_enqueue_scripts', function(){
+                wp_enqueue_script('vidsoe', $this->url() . 'assets/vidsoe-contact-form-7.js', ['vidsoe'], filemtime($this->dir() . 'assets/vidsoe-contact-form-7.js'), true);
+            });
             vidsoe()->one('redirect_post_location', [$this, 'redirect_post_location'], 10, 2);
             vidsoe()->one('register_post_type_args', [$this, 'register_post_type_args'], 10, 2);
             vidsoe()->one('rwmb_meta_boxes', [$this, 'rwmb_meta_boxes']);

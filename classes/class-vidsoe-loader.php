@@ -29,7 +29,6 @@ if(!class_exists('Vidsoe_Loader')){
                 $vidsoe->add_admin_notice('<strong>' . __('Error') . '</strong>: ' . $filesystem->get_error_message());
             }
             $vidsoe->build_update_checker('https://github.com/vidsoe/vidsoe', $file, 'vidsoe');
-            $vidsoe->load_js();
     	}
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

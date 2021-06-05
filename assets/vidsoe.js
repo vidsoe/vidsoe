@@ -102,5 +102,88 @@ if(typeof vidsoe === 'undefined'){
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        page_visibility_event: function(){
+            'use strict';
+            var visibilityChange = '';
+            if(typeof document.hidden !== 'undefined'){ // Opera 12.10 and Firefox 18 and later support
+                visibilityChange = 'visibilitychange';
+            } else if(typeof document.webkitHidden !== 'undefined'){
+                visibilityChange = 'webkitvisibilitychange';
+            } else if(typeof document.msHidden !== 'undefined'){
+                visibilityChange = 'msvisibilitychange';
+            } else if(typeof document.mozHidden !== 'undefined'){ // Deprecated
+                visibilityChange = 'mozvisibilitychange';
+            }
+            return visibilityChange;
+        },
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        page_visibility_state: function(){
+            'use strict';
+            var hidden = '';
+            if(typeof document.hidden !== 'undefined'){ // Opera 12.10 and Firefox 18 and later support
+                hidden = 'hidden';
+            } else if(typeof document.webkitHidden !== 'undefined'){
+                hidden = 'webkitHidden';
+            } else if(typeof document.msHidden !== 'undefined'){
+                hidden = 'msHidden';
+            } else if(typeof document.mozHidden !== 'undefined'){ // Deprecated
+                hidden = 'mozHidden';
+            }
+            return document[hidden];
+        },
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        parse_str: function(){
+            'use strict';
+            var i = 0, search_object = {}, search_array = [];
+            search_array = str.replace('?', '').split('&');
+            for(i = 0; i < search_array.length; i ++){
+                search_object[search_array[i].split('=')[0]] = search_array[i].split('=')[1];
+            }
+            return search_object;
+        },
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        parse_url: function(){
+            'use strict';
+            var a = {}, components = {}, keys = [];
+            a = document.createElement('a');
+            keys = ['protocol', 'hostname', 'port', 'pathname', 'search', 'hash'];
+            if(url === ''){
+                a.href = jQuery(location).attr('href');
+            } else {
+                a.href = url;
+            }
+            if(typeof component === 'undefined' || component === ''){
+                jQuery.map(keys, function(c){
+                    components[c] = a[c];
+                });
+                return components;
+            } else if(jQuery.inArray(component, keys) !== -1){
+                return a[component];
+            } else {
+                return '';
+            }
+        },
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        rem_to_px: function(count){
+            'use strict';
+            var unit = '';
+            unit = jQuery('html').css('font-size');
+        	if(typeof count !== 'undefined' && count > 0){
+        		return (parseInt(unit) * count);
+        	} else {
+        		return parseInt(unit);
+        	}
+        },
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     };
 }

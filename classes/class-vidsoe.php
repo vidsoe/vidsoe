@@ -134,6 +134,7 @@ if(!class_exists('Vidsoe')){
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     	public function contact_form_7(){
+            // validar si el plugin está activo, si no regresar wp_error
             if(!class_exists('Vidsoe_Contact_Form_7')){
                 require_once(plugin_dir_path($file) . 'classes/class-vidsoe-contact-form-7.php');
             }
@@ -238,22 +239,17 @@ if(!class_exists('Vidsoe')){
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         public function load(){
+            $vidsoe->one('admin_enqueue_scripts', function(){
+                wp_enqueue_script('vidsoe', $this->url() . 'assets/vidsoe.js', ['jquery'], filemtime($this->dir() . 'assets/vidsoe.js'), true);
+            });
+            $vidsoe->one('login_enqueue_scripts', function(){
+                wp_enqueue_script('vidsoe', $this->url() . 'assets/vidsoe.js', ['jquery'], filemtime($this->dir() . 'assets/vidsoe.js'), true);
+            });
+            $vidsoe->one('wp_enqueue_scripts', function(){
+                wp_enqueue_script('vidsoe', $this->url() . 'assets/vidsoe.js', ['jquery'], filemtime($this->dir() . 'assets/vidsoe.js'), true);
+            });
             vidsoe()->one('mb_settings_pages', [$this, 'mb_settings_pages']);
             vidsoe()->one('rwmb_meta_boxes', [$this, 'rwmb_meta_boxes']);
-        }
-
-    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    	public function load_js(){
-            $vidsoe->on('admin_enqueue_scripts', function(){
-                vidsoe()->enqueue()->functions();
-            });
-            $vidsoe->on('login_enqueue_scripts', function(){
-                vidsoe()->enqueue()->functions();
-            });
-            $vidsoe->on('wp_enqueue_scripts', function(){
-                vidsoe()->enqueue()->functions();
-            });
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

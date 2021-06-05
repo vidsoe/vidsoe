@@ -46,7 +46,7 @@ if(!class_exists('Vidsoe_BuddyPress')){
     	//
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    	public function first_name_and_last_name($lastname_field_name = ''){
+    	public function use_first_name_and_last_name($lastname_field_name = ''){
             if($lastname_field_name){
                 $this->lastname_field_name = $lastname_field_name;
                 vidsoe()->one('bp_core_signup_user', [$this, 'xprofile_sync_wp_profile'], 11);
@@ -58,7 +58,10 @@ if(!class_exists('Vidsoe_BuddyPress')){
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     	public function xprofile_data_after_save($data){
-            if(bp_xprofile_fullname_field_id() !== $data->field_id and xprofile_get_field_id_from_name($this->lastname_field_name) !== $data->field_id){
+            if($data->field_id !== bp_xprofile_fullname_field_id()){
+        		return;
+        	}
+            if($data->field_id !== xprofile_get_field_id_from_name($this->lastname_field_name)){
         		return;
         	}
         	$this->xprofile_sync_wp_profile($data->user_id);

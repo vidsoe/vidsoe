@@ -5,7 +5,6 @@ if(typeof vidsoe === 'undefined'){
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         add_query_arg: function(key, value, url){
-            'use strict';
             var a = {}, href = '', search = [], search_object = {};
             a = document.createElement('a');
             if(url === ''){
@@ -29,7 +28,7 @@ if(typeof vidsoe === 'undefined'){
                 href += a.pathname;
             }
             if(a.search){
-                search_object = vidsoe.parse_str(a.search);
+                search_object = this.parse_str(a.search);
                 jQuery.each(search_object, function(k, v){
                     if(k != key){
                         search.push(k + '=' + v);
@@ -53,7 +52,6 @@ if(typeof vidsoe === 'undefined'){
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         add_query_args: function(args, url){
-            'use strict';
             var a = {}, href = '', search = [], search_object = {};
             a = document.createElement('a');
             if(url === ''){
@@ -77,7 +75,7 @@ if(typeof vidsoe === 'undefined'){
                 href += a.pathname;
             }
             if(a.search){
-                search_object = vidsoe.parse_str(a.search);
+                search_object = this.parse_str(a.search);
                 jQuery.each(search_object, function(k, v){
                     if(!(k in args)){
                         search.push(k + '=' + v);
@@ -103,7 +101,6 @@ if(typeof vidsoe === 'undefined'){
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         page_visibility_event: function(){
-            'use strict';
             var visibilityChange = '';
             if(typeof document.hidden !== 'undefined'){ // Opera 12.10 and Firefox 18 and later support
                 visibilityChange = 'visibilitychange';
@@ -120,7 +117,6 @@ if(typeof vidsoe === 'undefined'){
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         page_visibility_state: function(){
-            'use strict';
             var hidden = '';
             if(typeof document.hidden !== 'undefined'){ // Opera 12.10 and Firefox 18 and later support
                 hidden = 'hidden';
@@ -137,7 +133,6 @@ if(typeof vidsoe === 'undefined'){
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         parse_str: function(){
-            'use strict';
             var i = 0, search_object = {}, search_array = [];
             search_array = str.replace('?', '').split('&');
             for(i = 0; i < search_array.length; i ++){
@@ -149,7 +144,6 @@ if(typeof vidsoe === 'undefined'){
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         parse_url: function(){
-            'use strict';
             var a = {}, components = {}, keys = [];
             a = document.createElement('a');
             keys = ['protocol', 'hostname', 'port', 'pathname', 'search', 'hash'];
@@ -173,7 +167,6 @@ if(typeof vidsoe === 'undefined'){
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         rem_to_px: function(count){
-            'use strict';
             var unit = '';
             unit = jQuery('html').css('font-size');
         	if(typeof count !== 'undefined' && count > 0){

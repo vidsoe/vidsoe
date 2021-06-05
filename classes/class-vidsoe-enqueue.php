@@ -44,7 +44,8 @@ if(!class_exists('Vidsoe_Enqueue')){
 
     	public function ace($deps = []){
             wp_enqueue_script('vidsoe-ace', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js', $deps, '1.4.12', true);
-            wp_enqueue_script('vidsoe-language-tools', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js', ['vidsoe-ace'], '1.4.12', true);
+            wp_enqueue_script('vidsoe-ace-language-tools', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js', ['vidsoe-ace'], '1.4.12', true);
+            wp_add_inline_script('vidsoe-ace-language-tools', "ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12'); ace.require('ace/ext/language_tools');");
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -59,7 +59,7 @@ if(!class_exists('Vidsoe')){
                 $this->admin_notices[$md5] = $this->admin_notice($admin_notice);
             }
             $this->one('admin_notices', function(){
-                if$this->admin_notices){
+                if($this->admin_notices){
                     foreach($this->admin_notices as $admin_notice){
                         echo $admin_notice;
                     }

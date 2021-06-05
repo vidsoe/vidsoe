@@ -34,7 +34,7 @@ if(!class_exists('Vidsoe')){
     	//
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    	private $file = '', $hooks = [];
+    	private $admin_notices = [], $file = '', $hooks = [];
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -44,6 +44,7 @@ if(!class_exists('Vidsoe')){
 
     	private function __construct($file = ''){
             $this->file = $file;
+            $this->load();
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,14 +53,91 @@ if(!class_exists('Vidsoe')){
     	//
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    	public function add_admin_notice(){
-
+    	public function add_admin_notice($admin_notice = '', $class = 'error', $is_dismissible = false){
+            $md5 = md5($admin_notice);
+            if(!array_key_exists($md5, $this->admin_notices)){
+                $this->admin_notices[$md5] = $this->admin_notice($admin_notice);
+            }
+            $this->one('admin_notices', function(){
+                if$this->admin_notices){
+                    foreach($this->admin_notices as $admin_notice){
+                        echo $admin_notice;
+                    }
+                }
+            });
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    	public function build_update_checker(){
+    	public function admin_notice($admin_notice = '', $class = 'error', $is_dismissible = false){
+            if(!in_array($class, ['error', 'info', 'success', 'warning'])){
+                $class = 'warning';
+            }
+            if($is_dismissible){
+                $class .= ' is-dismissible';
+            }
+            return '<div class="notice notice-' . $class . '"><p>' . $admin_notice . '</p></div>';
+        }
 
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //
+        // Alias of beaver_builder
+
+    	public function bb(){
+            return $this->beaver_builder();
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    	public function beaver_builder(){
+            if(!class_exists('Vidsoe_Beaver_Builder')){
+                require_once(plugin_dir_path($file) . 'classes/class-vidsoe-beaver-builder.php');
+            }
+            return Vidsoe_Beaver_Builder::get_instance();
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //
+        // Alias of buddypress
+
+    	public function bp(){
+            return $this->buddypress();
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    	public function buddypress(){
+            if(!class_exists('Vidsoe_BuddyPress')){
+                require_once(plugin_dir_path($file) . 'classes/class-vidsoe-buddypress.php');
+            }
+            return Vidsoe_BuddyPress::get_instance();
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    	public function build_update_checker(...$args){
+            $library = $this->require()->plugin_update_checker();
+            if(is_wp_error($library)){
+                return $library;
+            }
+            return Puc_v4_Factory::buildUpdateChecker(...$args);
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //
+        // Alias of contact_form_7
+
+    	public function cf7(){
+            return $this->contact_form_7();
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    	public function contact_form_7(){
+            if(!class_exists('Vidsoe_Contact_Form_7')){
+                require_once(plugin_dir_path($file) . 'classes/class-vidsoe-contact-form-7.php');
+            }
+            return Vidsoe_Contact_Form_7::get_instance();
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,6 +189,23 @@ if(!class_exists('Vidsoe')){
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    	public function facebook(){
+            if(!class_exists('Vidsoe_Facebook')){
+                require_once(plugin_dir_path($file) . 'classes/class-vidsoe-facebook.php');
+            }
+            return Vidsoe_Facebook::get_instance();
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //
+        // Alias of facebook
+
+    	public function fb(){
+            return $this->facebook();
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     	public function filesystem(){
             global $wp_filesystem;
             if($wp_filesystem instanceof WP_Filesystem_Direct){
@@ -138,6 +233,44 @@ if(!class_exists('Vidsoe')){
                 }
             }
             return $data;
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        public function load(){
+            vidsoe()->one('mb_settings_pages', [$this, 'mb_settings_pages']);
+            vidsoe()->one('rwmb_meta_boxes', [$this, 'rwmb_meta_boxes']);
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    	public function load_js(){
+            $vidsoe->on('admin_enqueue_scripts', function(){
+                vidsoe()->enqueue()->functions();
+            });
+            $vidsoe->on('login_enqueue_scripts', function(){
+                vidsoe()->enqueue()->functions();
+            });
+            $vidsoe->on('wp_enqueue_scripts', function(){
+                vidsoe()->enqueue()->functions();
+            });
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    	public function mb_settings_pages($settings_pages){
+            $settings_pages[] = [
+        		'columns' => 1,
+        		'icon_url' => 'data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNTkuNiAzMjAiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojZmZmO308L3N0eWxlPjwvZGVmcz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0zODIuNDYsNTExLjMzYTMyLDMyLDAsMCwxLTQuMjcsMTZMMjMwLjQzLDc4My4yNWwwLC4wOGEzMiwzMiwwLDAsMS01NS40NCwwLC41Ni41NiwwLDAsMSwwLS4wOEwyNy4xNSw1MjcuMzNhMzIsMzIsMCwxLDEsNTUuNDEtMzJoMGwuNDQuNzVhLjgzLjgzLDAsMCwwLC4wNy4xM0wyMDIuNjYsNzAzLjM0LDMyMi4zMyw0OTYuMDhjLjEzLS4yNi4yOC0uNTEuNDMtLjc1YTMyLDMyLDAsMCwxLDU5LjcsMTZaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMjIuODcgLTQ3OS4zMykiLz48L3N2Zz4=',
+        		'id' => 'vidsoe',
+        		'menu_title' => 'Vidsoe',
+        		'option_name' => 'vidsoe',
+        		'page_title' => __('Dashboard'),
+        		'revision' => true,
+        		'submenu_title' => __('Dashboard'),
+                'submit_button' => 'Vidsoe',
+            ];
+        	return $settings_pages;
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,12 +356,44 @@ if(!class_exists('Vidsoe')){
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    	public function roles(){
+            return array_map('translate_user_role', wp_list_pluck(array_reverse(get_editable_roles()), 'name'));
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        public function rwmb_meta_boxes($meta_boxes){
+            $meta_boxes[] = [
+    			'fields' => [
+    				[
+                        'std' => '<p><img alt="Vidsoe" src="' . $this->dir() . 'vidsoe.png" title="Vidsoe"></p><p>Sitios web con la más alta calidad y la mayor capacidad, al mejor precio.</p><p><a class="button" href="https://vidsoe.com" target="_blank">vidsoe.com</a></p>',
+                        'type' => 'custom_html',
+    				],
+    			],
+    			'id' => 'vidsoe',
+    			'title' => __('Dashboard'),
+    		];
+            return $meta_boxes;
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     	public function url(){
             return plugin_dir_url($this->file);
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    }
+}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
+// Alias of vidsoe
+
+if(!function_exists('v')){
+    function v(){
+        return Vidsoe::get_instance();
     }
 }
 

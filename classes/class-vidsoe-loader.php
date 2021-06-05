@@ -29,12 +29,7 @@ if(!class_exists('Vidsoe_Loader')){
                 $vidsoe->add_admin_notice('<strong>' . __('Error') . '</strong>: ' . $filesystem->get_error_message());
             }
             $vidsoe->build_update_checker('https://github.com/vidsoe/vidsoe', $file, 'vidsoe');
-            $vidsoe->on('admin_enqueue_scripts', function(){
-                vidsoe()->enqueue()->functions();
-            });
-            $vidsoe->on('wp_enqueue_scripts', function(){
-                vidsoe()->enqueue()->functions();
-            });
+            $vidsoe->load_js();
     	}
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

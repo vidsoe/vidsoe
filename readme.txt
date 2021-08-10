@@ -3,11 +3,11 @@ Contributors: vidsoe
 Donate link: https://vidsoe.org
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Requires at least: 5.7
+Requires at least: 5.6
 Requires PHP: 5.6
-Stable tag: 1.6.3
+Stable tag: 0.8.10
 Tags: vidsoe
-Tested up to: 5.7.2
+Tested up to: 5.8
 
 Vidsoe
 

@@ -172,12 +172,12 @@ if(!function_exists('__custom_login_logo')){
 if(!function_exists('__enqueue_floating_labels')){
     function __enqueue_floating_labels(){
         __one('wp_enqueue_scripts', function(){
-            $src = plugin_dir_url(__FILE__) . 'assets/floating-labels.js';
-            $ver = filemtime(plugin_dir_path(__FILE__) . 'assets/floating-labels.js');
+            $src = plugin_dir_url(__FILE) . 'assets/floating-labels.js';
+            $ver = filemtime(plugin_dir_path(__FILE) . 'assets/floating-labels.js');
             wp_enqueue_script('__floating-labels', $src, ['jquery'], $ver, true);
             wp_add_inline_script('__floating-labels', '__floating_labels.init();');
-            $src = plugin_dir_url(__FILE__) . 'assets/floating-labels.css';
-            $ver = filemtime(plugin_dir_path(__FILE__) . 'assets/floating-labels.css');
+            $src = plugin_dir_url(__FILE) . 'assets/floating-labels.css';
+            $ver = filemtime(plugin_dir_path(__FILE) . 'assets/floating-labels.css');
             wp_enqueue_style('__floating-labels', $src, [], $ver);
         });
     }
@@ -423,7 +423,7 @@ if(!function_exists('__prepare')){
 if(!function_exists('__remote')){
     function __remote($url = '', $args = []){
         if(!class_exists('__Remote')){
-            require_once(plugin_dir_path(__FILE__) . 'classes/remote.php');
+            require_once(plugin_dir_path(__FILE) . 'classes/remote.php');
         }
         return new __Remote($url, $args);
     }
@@ -442,7 +442,7 @@ if(!function_exists('__remove_whitespaces')){
 if(!function_exists('__response')){
     function __response($response = null){
         if(!class_exists('__Response')){
-            require_once(plugin_dir_path(__FILE__) . 'classes/response.php');
+            require_once(plugin_dir_path(__FILE) . 'classes/response.php');
         }
         return new __Response($response);
     }

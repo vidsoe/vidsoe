@@ -12,7 +12,7 @@ Plugin URI: https://github.com/vidsoe/vidsoe
 Requires at least: 5.6
 Requires PHP: 5.6
 Text Domain: vidsoe
-Version: 0.8.10
+Version: 0.8.10.1
 */
 
 if(!defined('ABSPATH')){

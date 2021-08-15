@@ -17,7 +17,8 @@ if(!class_exists('Vidsoe')){
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    	private function __construct(){
+    	private function __construct($file = ''){
+            $this->file = $file;
             add_action('wp_enqueue_scripts', function(){
                 $src = plugin_dir_url($this->file) . 'assets/vidsoe.js';
                 $ver = filemtime(plugin_dir_path($this->file) . 'assets/vidsoe.js');
@@ -608,7 +609,7 @@ if(!class_exists('Vidsoe')){
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        public is_extension_allowed($extension = ''){
+        public function is_extension_allowed($extension = ''){
             foreach(wp_get_mime_types() as $exts => $mime){
                 if(preg_match('!^(' . $exts . ')$!i', $extension)){
                     return true;
@@ -945,7 +946,7 @@ if(!class_exists('Vidsoe')){
 
         public function remote($url = '', $args = []){
             if(!class_exists('Vidsoe_Remote')){
-                require_once(plugin_dir_path($this->file) . 'classes/vidsoe-remote.php');
+                require_once(plugin_dir_path($this->file) . 'classes/class-vidsoe-remote.php');
             }
             return new Vidsoe_Remote($url, $args);
         }
@@ -1008,7 +1009,7 @@ if(!class_exists('Vidsoe')){
 
         public function response($response = null){
             if(!class_exists('Vidsoe_Response')){
-                require_once(plugin_dir_path($this->file) . 'classes/vidsoe-response.php');
+                require_once(plugin_dir_path($this->file) . 'classes/class-vidsoe-response.php');
             }
             return new Vidsoe_Response($response);
         }
@@ -1241,7 +1242,7 @@ if(!class_exists('Vidsoe')){
     	//
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        public static function get_instance($file){
+        public static function get_instance($file = ''){
             if(null !== self::$instance){
                 return self::$instance;
             }

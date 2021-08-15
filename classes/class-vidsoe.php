@@ -31,7 +31,7 @@ if(!class_exists('Vidsoe')){
         private function extension($extension = '', $version = ''){
             $class = 'vidsoe_' . $this->canonicalize($extension);
             if(!class_exists($class)){
-                $directory = $this->require("https://github.com/vidsoe/vidsoe-{$extension}/archive/refs/tags/vidsoe-{$extension}-{$version}.zip", "vidsoe-{$extension}-{$version}");
+                $directory = $this->require("https://github.com/vidsoe/vidsoe-{$extension}/archive/refs/tags/{$version}.zip", "vidsoe-{$extension}-{$version}");
                 if(is_wp_error($directory)){
                     return $directory;
                 }

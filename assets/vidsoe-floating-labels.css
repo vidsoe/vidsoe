@@ -1,0 +1,112 @@
+.vidsoe-floating-labels {
+    display: block;
+    position: relative;
+}
+
+.vidsoe-floating-labels input,
+.vidsoe-floating-labels label {
+    height: 3.125rem;
+    padding: .75rem;
+}
+
+.vidsoe-floating-labels > textarea {
+    height: 6.25rem;
+    padding: .75rem;
+    resize: none;
+    overflow: hidden;
+}
+
+.vidsoe-floating-labels select {
+    height: 3.125rem;
+    padding: .75rem;
+}
+
+.vidsoe-floating-labels label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    margin-bottom: 0; /* Override default `<label>` margin */
+    line-height: 1.5;
+    color: var(--gray-dark);
+    pointer-events: none;
+    cursor: text; /* Match the input under the label */
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+
+.vidsoe-floating-labels input::-webkit-input-placeholder,
+.vidsoe-floating-labels textarea::-webkit-input-placeholder {
+    color: transparent;
+}
+
+.vidsoe-floating-labels input::-moz-placeholder,
+.vidsoe-floating-labels textarea::-moz-placeholder {
+    color: transparent;
+}
+
+.vidsoe-floating-labels input::placeholder,
+.vidsoe-floating-labels textarea::placeholder {
+    color: transparent;
+}
+
+.vidsoe-floating-labels input:not(:-moz-placeholder-shown),
+.vidsoe-floating-labels textarea:not(:-moz-placeholder-shown) {
+    padding-top: 1.25rem;
+    padding-bottom: .25rem;
+}
+
+.vidsoe-floating-labels input:not(:placeholder-shown),
+.vidsoe-floating-labels textarea:not(:placeholder-shown) {
+    padding-top: 1.25rem;
+    padding-bottom: .25rem;
+}
+
+.vidsoe-floating-labels input:-webkit-autofill,
+.vidsoe-floating-labels textarea:-webkit-autofill {
+    padding-top: 1.25rem;
+    padding-bottom: .25rem;
+}
+
+.vidsoe-floating-labels select.placeholder-hidden {
+    padding-top: 1.25rem;
+    padding-bottom: .25rem;
+}
+
+.vidsoe-floating-labels input:not(:-moz-placeholder-shown) ~ label,
+.vidsoe-floating-labels textarea:not(:-moz-placeholder-shown) ~ label {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    font-size: 12px;
+    color: var(--gray);
+}
+
+.vidsoe-floating-labels input:not(:placeholder-shown) ~ label,
+.vidsoe-floating-labels textarea:not(:placeholder-shown) ~ label {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    font-size: 12px;
+    color: var(--gray);
+}
+
+.vidsoe-floating-labels input:-webkit-autofill ~ label,
+.vidsoe-floating-labels textarea:-webkit-autofill ~ label {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    font-size: 12px;
+    color: var(--gray);
+}
+
+.vidsoe-floating-labels select.placeholder-hidden ~ label {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    font-size: 12px;
+    color: var(--gray);
+}
+
+.vidsoe-floating-labels input:focus ~ label,
+.vidsoe-floating-labels select:focus ~ label,
+.vidsoe-floating-labels textarea:focus ~ label {
+    color: var(--gray);
+}

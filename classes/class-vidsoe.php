@@ -279,7 +279,7 @@ if(!class_exists('Vidsoe')){
             if(!$this->is_plugin_active('contact-form-7/wp-contact-form-7.php')){
                 return $this->error('This method requires Contact Form 7.');
             }
-            return $this->extension('contact-form-7', '1.2.3');
+            return $this->extension('contact-form-7', '0.8.15');
         }
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -29,7 +29,7 @@ if(!class_exists('Vidsoe_Remote')){
                 }
             }
             $response = wp_remote_request($this->url, $this->args);
-            return v()->response($response);
+            return vidsoe()->response($response);
         }
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

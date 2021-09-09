@@ -1,7 +1,7 @@
 <?php
 
 if(!class_exists('Vidsoe')){
-    final class Vidsoe {
+    final class Vidsoe extends Vidsoe_Base {
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     	//
@@ -9,44 +9,23 @@ if(!class_exists('Vidsoe')){
     	//
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        private $admin_notices = [], $external_rules = [], $hooks = [], $image_sizes = [], $rewrite_rules = [];
+        private $admin_notices = [], $already_called = [], $external_rules = [], $hooks = [], $image_sizes = [], $rewrite_rules = [];
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    	private function __clone(){}
-
+    	//
+    	// protected
+    	//
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    	private function __construct($file = ''){
-            $this->file = $file;
-            add_action('wp_enqueue_scripts', function(){
-                $src = plugin_dir_url($this->file) . 'assets/vidsoe.js';
-                $ver = filemtime(plugin_dir_path($this->file) . 'assets/vidsoe.js');
-                wp_enqueue_script('vidsoe', $src, ['jquery'], $ver, true);
-            });
-        }
-
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        private function extension($extension = '', $version = ''){
-            $class = 'vidsoe_' . $this->canonicalize($extension);
-            if(!class_exists($class)){
-                $directory = $this->require("https://github.com/vidsoe/vidsoe-{$extension}/archive/refs/tags/{$version}.zip", "vidsoe-{$extension}-{$version}");
-                if(is_wp_error($directory)){
-                    return $directory;
+    	protected function load(){
+            add_action('admin_notices', function(){
+                $fs = $this->filesystem();
+                if(is_wp_error($fs)){
+                    echo $this->admin_notice('<strong>' . __('Error:') . '</strong> ' . $fs->get_error_message());
                 }
-                require_once($directory . "/vidsoe-{$extension}.php");
-            }
-            return call_user_func([$class, 'get_instance']);
+            });
+            $this->build_update_checker('https://github.com/vidsoe/vidsoe', $this->file, 'vidsoe');
         }
-
-    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    	//
-    	// private static
-    	//
-    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        private static $instance = null;
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     	//
@@ -61,9 +40,6 @@ if(!class_exists('Vidsoe')){
                 $this->admin_notices[$md5] = $admin_notice;
             }
             $this->one('admin_notices', function(){
-                if(!$this->admin_notices){
-                    return;
-                }
                 foreach($this->admin_notices as $admin_notice){
                     echo $admin_notice;
                 }
@@ -82,9 +58,6 @@ if(!class_exists('Vidsoe')){
     			$this->external_rules[$md5] = $rule;
     		}
     		$this->one('admin_init', function(){
-                if(!$this->external_rules){
-                    return;
-                }
                 if(!current_user_can('manage_options')){
                     return;
                 }
@@ -102,9 +75,6 @@ if(!class_exists('Vidsoe')){
                 }
     		});
     		$this->one('generate_rewrite_rules', function($wp_rewrite){
-    			if(!$this->external_rules){
-    				return;
-    			}
     			foreach($this->external_rules as $rule){
     				$regex = str_replace(home_url('/'), '', $rule['regex']);
     				$query = str_replace(home_url('/'), '', $rule['query']);
@@ -122,9 +92,6 @@ if(!class_exists('Vidsoe')){
     			add_image_size($size, $width, $height, $crop);
             }
             $this->one('image_size_names_choose', function($sizes){
-                if(!$this->image_sizes){
-                    return $sizes;
-                }
     			foreach($this->image_sizes as $size => $name){
     				$sizes[$size] = $name;
     			}
@@ -149,6 +116,16 @@ if(!class_exists('Vidsoe')){
                 $class .= ' is-dismissible';
             }
             return '<div class="notice notice-' . $class . '"><p>' . $admin_notice . '</p></div>';
+        }
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        public function already_called($function = ''){
+            if(in_array($function, $this->already_called)){
+                return true;
+            }
+            $this->already_called[] = $function;
+            return false;
         }
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -238,11 +215,11 @@ if(!class_exists('Vidsoe')){
 
         public function build_update_checker(...$args){
             if(!class_exists('Puc_v4_Factory')){
-                $directory = $this->require('https://github.com/YahnisElsts/plugin-update-checker/archive/refs/tags/v4.11.zip', 'plugin-update-checker-4.11');
-                if(is_wp_error($directory)){
-                    return $directory;
+                $dir = $this->require('https://github.com/YahnisElsts/plugin-update-checker/archive/refs/tags/v4.11.zip', 'plugin-update-checker-4.11');
+                if(is_wp_error($dir)){
+                    return $dir;
                 }
-                require_once($directory . '/plugin-update-checker.php');
+                require_once($dir . '/plugin-update-checker.php');
             }
             return Puc_v4_Factory::buildUpdateChecker(...$args);
         }
@@ -275,15 +252,6 @@ if(!class_exists('Vidsoe')){
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        public function cf7(){
-            if(!$this->is_plugin_active('contact-form-7/wp-contact-form-7.php')){
-                return $this->error('This method requires Contact Form 7.');
-            }
-            return $this->extension('contact-form-7', '0.8.15.1');
-        }
-
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
         public function clone_role($source = '', $destination = '', $display_name = ''){
             $role = get_role($source);
             if(is_null($role)){
@@ -292,6 +260,15 @@ if(!class_exists('Vidsoe')){
             }
             $destination = $this->canonicalize($destination);
             return add_role($destination, $display_name, $role->capabilities);
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        public function contact_form_7(){
+            if(!class_exists('Vidsoe_Contact_Form_7')){
+                require_once(plugin_dir_path($this->file) . 'classes/class-vidsoe-contact-form-7.php');
+            }
+            return Vidsoe_Contact_Form_7::get_instance($this->file);
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -445,20 +422,6 @@ if(!class_exists('Vidsoe')){
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        public function enqueue_floating_labels(){
-            $this->one('wp_enqueue_scripts', function(){
-                $src = plugin_dir_url($this->file) . 'assets/floating-labels.js';
-                $ver = filemtime(plugin_dir_path($this->file) . 'assets/floating-labels.js');
-                wp_enqueue_script('vidsoe-floating-labels', $src, ['vidsoe'], $ver, true);
-                wp_add_inline_script('vidsoe-floating-labels', 'vidsoe.floating_labels.init();');
-                $src = plugin_dir_url($this->file) . 'assets/floating-labels.css';
-                $ver = filemtime(plugin_dir_path($this->file) . 'assets/floating-labels.css');
-                wp_enqueue_style('vidsoe-floating-labels', $src, [], $ver);
-            });
-        }
-
-    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
         public function error($message = '', $data = ''){
             if(is_wp_error($message)){
                 $data = $message->get_error_data();
@@ -489,13 +452,22 @@ if(!class_exists('Vidsoe')){
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        public function facebook(){
+            if(!class_exists('Vidsoe_Facebook')){
+                require_once(plugin_dir_path($this->file) . 'classes/class-vidsoe-facebook.php');
+            }
+            return Vidsoe_Facebook::get_instance($this->file);
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         public function file_get_html(...$args){
             if(!class_exists('simple_html_dom')){
-                $directory = $this->require('https://github.com/simplehtmldom/simplehtmldom/archive/refs/tags/1.9.1.zip', 'simplehtmldom-1.9.1');
-                if(is_wp_error($directory)){
-                    return $directory;
+                $dir = $this->require('https://github.com/simplehtmldom/simplehtmldom/archive/refs/tags/1.9.1.zip', 'simplehtmldom-1.9.1');
+                if(is_wp_error($dir)){
+                    return $dir;
                 }
-                require_once($directory . '/simple_html_dom.php');
+                require_once($dir . '/simple_html_dom.php');
             }
             return file_get_html(...$args);
         }
@@ -563,6 +535,15 @@ if(!class_exists('Vidsoe')){
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        public function google(){
+            if(!class_exists('Vidsoe_Google')){
+                require_once(plugin_dir_path($this->file) . 'classes/class-vidsoe-google.php');
+            }
+            return Vidsoe_Google::get_instance($this->file);
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         public function guid_to_postid($guid = ''){
             global $wpdb;
             $query = $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE guid = %s", $guid);
@@ -590,6 +571,40 @@ if(!class_exists('Vidsoe')){
         public function in_uploads($file = ''){
             $upload_dir = wp_get_upload_dir();
             return (0 === strpos($file, $upload_dir['basedir']));
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        public function ip(){
+			switch(true){
+				case isset($_SERVER['HTTP_CF_CONNECTING_IP']):
+					$ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+					break;
+				case class_exists('wfUtils'):
+					$ip = wfUtils::getIP();
+					break;
+				case isset($_SERVER['HTTP_X_FORWARDED_FOR']):
+					$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+					break;
+				case isset($_SERVER['HTTP_X_REAL_IP']):
+					$ip = $_SERVER['HTTP_X_REAL_IP'];
+					break;
+				case isset($_SERVER['REMOTE_ADDR']):
+					$ip = $_SERVER['REMOTE_ADDR'];
+					break;
+				default:
+					$ip = '';
+			}
+			if(false !== strpos($ip, ',')){
+				$ip = explode(',', $ip);
+				$ip = array_filter($ip);
+				$ip = array_map('trim', $ip);
+				$ip = $ip[0];
+			}
+        	if(!WP_Http::is_ip_address($ip)){
+        		return '';
+        	}
+        	return $ip;
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -647,15 +662,15 @@ if(!class_exists('Vidsoe')){
 
         public function jwt_decode(...$args){
             if(!class_exists('Firebase\JWT\JWT')){
-                $directory = $this->require('https://github.com/firebase/php-jwt/archive/refs/tags/v5.4.0.zip', 'php-jwt-5.4.0');
-                if(is_wp_error($directory)){
-                    return $directory;
+                $dir = $this->require('https://github.com/firebase/php-jwt/archive/refs/tags/v5.4.0.zip', 'php-jwt-5.4.0');
+                if(is_wp_error($dir)){
+                    return $dir;
                 }
-                require_once($directory . '/src/BeforeValidException.php');
-                require_once($directory . '/src/ExpiredException.php');
-                require_once($directory . '/src/JWK.php');
-                require_once($directory . '/src/JWT.php');
-                require_once($directory . '/src/SignatureInvalidException.php');
+                require_once($dir . '/src/BeforeValidException.php');
+                require_once($dir . '/src/ExpiredException.php');
+                require_once($dir . '/src/JWK.php');
+                require_once($dir . '/src/JWT.php');
+                require_once($dir . '/src/SignatureInvalidException.php');
             }
             return Firebase\JWT\JWT::decode(...$args);
     	}
@@ -664,15 +679,15 @@ if(!class_exists('Vidsoe')){
 
         public function jwt_encode(...$args){
             if(!class_exists('Firebase\JWT\JWT')){
-                $directory = $this->require('https://github.com/firebase/php-jwt/archive/refs/tags/v5.4.0.zip', 'php-jwt-5.4.0');
-                if(is_wp_error($directory)){
-                    return $directory;
+                $dir = $this->require('https://github.com/firebase/php-jwt/archive/refs/tags/v5.4.0.zip', 'php-jwt-5.4.0');
+                if(is_wp_error($dir)){
+                    return $dir;
                 }
-                require_once($directory . '/src/BeforeValidException.php');
-                require_once($directory . '/src/ExpiredException.php');
-                require_once($directory . '/src/JWK.php');
-                require_once($directory . '/src/JWT.php');
-                require_once($directory . '/src/SignatureInvalidException.php');
+                require_once($dir . '/src/BeforeValidException.php');
+                require_once($dir . '/src/ExpiredException.php');
+                require_once($dir . '/src/JWK.php');
+                require_once($dir . '/src/JWT.php');
+                require_once($dir . '/src/SignatureInvalidException.php');
             }
             return Firebase\JWT\JWT::encode(...$args);
     	}
@@ -693,6 +708,15 @@ if(!class_exists('Vidsoe')){
 
         public function last_p($text = '', $dot = true){
             return $this->one_p($text, $dot, 'last');
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        public function linkedin(){
+            if(!class_exists('Vidsoe_LinkedIn')){
+                require_once(plugin_dir_path($this->file) . 'classes/class-vidsoe-linkedin.php');
+            }
+            return Vidsoe_LinkedIn::get_instance($this->file);
         }
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1126,11 +1150,11 @@ if(!class_exists('Vidsoe')){
 
         public function str_get_html(...$args){
             if(!class_exists('simple_html_dom')){
-                $directory = $this->require('https://github.com/simplehtmldom/simplehtmldom/archive/refs/tags/1.9.1.zip', 'simplehtmldom-1.9.1');
-                if(is_wp_error($directory)){
-                    return $directory;
+                $dir = $this->require('https://github.com/simplehtmldom/simplehtmldom/archive/refs/tags/1.9.1.zip', 'simplehtmldom-1.9.1');
+                if(is_wp_error($dir)){
+                    return $dir;
                 }
-                require_once($directory . '/simple_html_dom.php');
+                require_once($dir . '/simple_html_dom.php');
             }
             return str_get_html(...$args);
         }
@@ -1147,11 +1171,11 @@ if(!class_exists('Vidsoe')){
 
         public function tgmpa(...$args){
             if(!class_exists('TGM_Plugin_Activation')){
-                $directory = $this->require('https://github.com/TGMPA/TGM-Plugin-Activation/archive/refs/tags/2.6.1.zip', 'TGM-Plugin-Activation-2.6.1');
-                if(is_wp_error($directory)){
-                    return $directory;
+                $dir = $this->require('https://github.com/TGMPA/TGM-Plugin-Activation/archive/refs/tags/2.6.1.zip', 'TGM-Plugin-Activation-2.6.1');
+                if(is_wp_error($dir)){
+                    return $dir;
                 }
-                require_once($directory . '/class-tgm-plugin-activation.php');
+                require_once($dir . '/class-tgm-plugin-activation.php');
             }
             return tgmpa(...$args);
         }
@@ -1227,47 +1251,15 @@ if(!class_exists('Vidsoe')){
 
         public function xlsx(...$args){
             if(!class_exists('XLSXWriter')){
-                $directory = $this->require('https://github.com/mk-j/PHP_XLSXWriter/archive/refs/tags/0.38.zip', 'PHP_XLSXWriter-0.38');
-                if(is_wp_error($directory)){
-                    return $directory;
+                $dir = $this->require('https://github.com/mk-j/PHP_XLSXWriter/archive/refs/tags/0.38.zip', 'PHP_XLSXWriter-0.38');
+                if(is_wp_error($dir)){
+                    return $dir;
                 }
-                require_once($directory . '/xlsxwriter.class.php');
+                require_once($dir . '/xlsxwriter.class.php');
             }
             return new XLSXWriter(...$args);
         }
 
-    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    	//
-    	// public static
-    	//
-    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        public static function get_instance($file = ''){
-            if(null !== self::$instance){
-                return self::$instance;
-            }
-            if('' === $file){
-                wp_die(__('File doesn&#8217;t exist?'));
-            }
-            if(!is_file($file)){
-                wp_die(sprintf(__('File &#8220;%s&#8221; doesn&#8217;t exist?'), $file));
-            }
-            self::$instance = new self($file);
-            return self::$instance;
-    	}
-
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    	//
-    	// useful methods
-    	//
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        //
-        // add_larger_image_sizes
-        // destroy_other_sessions
-        // fix_audio_video_extensions
-        // set_local_login_header
-        // support_sessions
-        //
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     }

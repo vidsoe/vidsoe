@@ -46,7 +46,7 @@ if(!class_exists('Vidsoe_Response')){
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         protected function seems_wp_http_requests_response($response = null){
-            return (v()->array_keys_exist(['body', 'cookies', 'filename', 'headers', 'http_response', 'response'], $response) and ($response['http_response'] instanceof WP_HTTP_Requests_Response));
+            return (vidsoe()->array_keys_exist(['body', 'cookies', 'filename', 'headers', 'http_response', 'response'], $response) and ($response['http_response'] instanceof WP_HTTP_Requests_Response));
         }
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -114,7 +114,7 @@ if(!class_exists('Vidsoe_Response')){
             if(is_wp_error($this->raw_response)){
                 return $this->raw_response;
             } else {
-                return v()->error($this->message, [
+                return vidsoe()->error($this->message, [
                     'status' => $this->code,
                 ]);
             }

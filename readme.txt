@@ -5,9 +5,9 @@ License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires at least: 5.6
 Requires PHP: 5.6
-Stable tag: 0.8.15.4
+Stable tag: 0.9.9
 Tags: vidsoe
-Tested up to: 5.8
+Tested up to: 5.8.1
 
 Vidsoe
 

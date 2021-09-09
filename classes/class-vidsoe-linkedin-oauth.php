@@ -35,6 +35,7 @@ if(!class_exists('Vidsoe_LinkedIn_OAuth')){
             $last_name = $this->userinfo['last_name'];
             $name = $this->userinfo['first_name'] . ' ' . $this->userinfo['last_name'];
             $password = wp_generate_password();
+            $user_login = md5($email);
             $userdata = [
                 'display_name' => $name,
                 'first_name' => $first_name,
@@ -42,7 +43,7 @@ if(!class_exists('Vidsoe_LinkedIn_OAuth')){
                 'nickname' => $name,
                 'role' => $this->default_role,
                 'user_email' => $email,
-                'user_login' => $email,
+                'user_login' => $user_login,
                 'user_pass' => $password,
             ];
             $user_id = wp_insert_user($userdata);
@@ -51,7 +52,7 @@ if(!class_exists('Vidsoe_LinkedIn_OAuth')){
             }
             update_user_meta($user_id, 'linkedin_userinfo', $this->userinfo);
             $credentials = [
-                'user_login' => $email,
+                'user_login' => $user_login,
                 'user_password' => $password,
                 'remember' => $this->remember,
             ];

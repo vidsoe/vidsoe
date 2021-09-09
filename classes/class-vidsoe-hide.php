@@ -18,7 +18,7 @@ if(!class_exists('Vidsoe_Hide')){
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         public function the_dashboard($capability = 'edit_posts', $location = ''){
-            $this->one('admin_init', function() use($capability, $location){
+            vidsoe()->one('admin_init', function() use($capability, $location){
                 if(wp_doing_ajax() or current_user_can($capability)){
                     return;
                 }
@@ -33,7 +33,7 @@ if(!class_exists('Vidsoe_Hide')){
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         public function the_toolbar($capability = 'edit_posts'){
-            $this->one('show_admin_bar', function($show) use($capability){
+            vidsoe()->one('show_admin_bar', function($show) use($capability){
                 if(!current_user_can($capability)){
 					$show = false;
 				}
@@ -44,7 +44,7 @@ if(!class_exists('Vidsoe_Hide')){
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         public function others_media($capability = 'edit_others_posts'){
-            $this->one('ajax_query_attachments_args', function($query) use($capability){
+            vidsoe()->one('ajax_query_attachments_args', function($query) use($capability){
                 if(!current_user_can($capability)){
 					$query['author'] = get_current_user_id();
 				}
@@ -55,7 +55,7 @@ if(!class_exists('Vidsoe_Hide')){
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         public function others_posts($capability = 'edit_others_posts'){
-            $this->one('current_screen', function($current_screen) use($capability){
+            vidsoe()->one('current_screen', function($current_screen) use($capability){
                 global $pagenow;
                 if('edit.php' !== $pagenow or current_user_can($capability)){
                     return;
@@ -67,7 +67,7 @@ if(!class_exists('Vidsoe_Hide')){
                     return $views;
                 });
             });
-            $this->one('pre_get_posts', function($query) use($capability){
+            vidsoe()->one('pre_get_posts', function($query) use($capability){
                 global $pagenow;
                 if('edit.php' !== $pagenow){
                     return $query;
@@ -82,7 +82,7 @@ if(!class_exists('Vidsoe_Hide')){
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         public function the_rest_api($capability = 'read'){
-            $this->one('rest_authentication_errors', function($error) use($capability){
+            vidsoe()->one('rest_authentication_errors', function($error) use($capability){
                 if(!empty($error)){
 					return $error;
 				}
@@ -98,7 +98,7 @@ if(!class_exists('Vidsoe_Hide')){
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         public function the_entire_site($capability = 'read', $exclude_other_pages = [], $exclude_special_pages = []){
-            $this->one('template_redirect', function() use($capability, $exclude_other_pages, $exclude_special_pages){
+            vidsoe()->one('template_redirect', function() use($capability, $exclude_other_pages, $exclude_special_pages){
                 if(in_array(get_the_ID(), (array) $exclude_other_pages)){
                     return;
                 }

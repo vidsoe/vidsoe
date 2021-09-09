@@ -556,6 +556,15 @@ if(!class_exists('Vidsoe')){
 
     	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        public function hide(){
+            if(!class_exists('Vidsoe_Hide')){
+                require_once(plugin_dir_path($this->file) . 'classes/class-vidsoe-hide.php');
+            }
+            return Vidsoe_Hide::get_instance($this->file);
+        }
+
+    	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         public function home_root(){
             $home_root = parse_url(home_url());
         	if(isset($home_root['path'])){

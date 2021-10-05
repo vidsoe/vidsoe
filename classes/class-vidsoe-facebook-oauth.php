@@ -50,7 +50,7 @@ if(!class_exists('Vidsoe_Facebook_OAuth')){
             if(is_wp_error($user_id)){
                 wp_die($user_id);
             }
-            update_user_meta($user->ID, 'facebook_userinfo', $this->userinfo);
+            update_user_meta($user_id, 'facebook_userinfo', $this->userinfo);
             $credentials = [
                 'user_login' => $user_login,
                 'user_password' => $password,
